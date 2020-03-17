@@ -10,7 +10,7 @@ def display_board(board):
 
 def player_input():
     
-    marker = input("Choose your marker (X/O)")
+    marker = input("Choose your marker (X/O): ")
     if marker == "X":
         print("You will go first")
         return marker
@@ -45,7 +45,7 @@ def win_check(board, mark):
     
     win = False
     for sequence in sequences:
-        if opponent not in sequence:
+        if opponent not in sequence and "#" not in sequence:
             win = True
             break
     return win
@@ -61,23 +61,22 @@ def space_check(board, position):
     return board[position] == "#"
 
 def full_board_check(board):
-    return "#" in board[1:]
+    return "#"  not in board[1:]
 
 
 
 
 def player_choice(board):
-    position = int(input("Pick a position"))
+    position = int(input("Pick a position: "))
     if space_check(board, position):
         return position
     else:
-        print("Position is already taken. Pick another position")
+        print("Position is already taken. Pick another position: ")
         player_choice(board)
-    pass
 
 
 def replay():
-    flag = input("Do you want to play again? (Y/N)")
+    flag = input("Do you want to play again? (Y/N): ")
     flag = flag.lower()
     if flag == 'y':
         return True
@@ -96,9 +95,37 @@ def main():
 
         while game_on:
             # player 1's turn
-
+            if not full_board_check(board):
+                print("Player 1: ", end="")
+                pos = player_choice(board)
+                place_marker(board, "X", pos)
+                print("\n"*100)
+                display_board(board)
+                if win_check(board, "X"):
+                    print("Player 1 wins")
+                    game_on = False
+                    continue
+            else:
+                print("Tie")
+                game_on = False
+                continue
             # player 2's turn
-            pass
+            if not full_board_check(board):
+                print("Player 2: ", end="")
+                pos = player_choice(board)
+                place_marker(board, "O", pos)
+                print("\n"*100)
+                display_board(board)
+                if win_check(board, "O"):
+                    print("Player 2 wins")
+                    game_on = False
+
+            else:
+                print("Tie")
+                game_on = False
 
         if not replay():
             break
+
+if __name__ == "__main__":
+    main()
