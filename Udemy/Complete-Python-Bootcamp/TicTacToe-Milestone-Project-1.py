@@ -19,7 +19,7 @@ def player_input():
         return marker
     else:
         print("Your marker can either be X or O")
-        player_input()
+        return -1
 
 def place_marker(board, marker, position):
     board[position] = marker
@@ -58,6 +58,8 @@ def choose_first():
         return "Player 2"
 
 def space_check(board, position):
+    if position > 9:
+        return False
     return board[position] == "#"
 
 def full_board_check(board):
@@ -68,11 +70,12 @@ def full_board_check(board):
 
 def player_choice(board):
     position = int(input("Pick a position: "))
-    if space_check(board, position):
-        return position
-    else:
+    if position > 9 or not space_check(board, position):
         print("Position is already taken. Pick another position: ")
-        player_choice(board)
+        return -1
+    else:
+        return position
+
 
 
 def replay():
@@ -90,6 +93,8 @@ def main():
         # Set the game up here
         board = ["#"] * 10
         marker = player_input()
+        while marker == -1:
+            marker = player_input()
         game_on = True
         display_board(board)
 
@@ -98,6 +103,8 @@ def main():
             if not full_board_check(board):
                 print("Player 1: ", end="")
                 pos = player_choice(board)
+                while pos == -1:
+                    pos = player_choice(board)
                 place_marker(board, "X", pos)
                 print("\n"*100)
                 display_board(board)
@@ -113,6 +120,8 @@ def main():
             if not full_board_check(board):
                 print("Player 2: ", end="")
                 pos = player_choice(board)
+                while pos == -1:
+                    pos = player_choice(board)
                 place_marker(board, "O", pos)
                 print("\n"*100)
                 display_board(board)
